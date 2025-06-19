@@ -1,76 +1,95 @@
-# Entities and Relationships
+# Project Entities and Relationships
 
-## Entities
+## Admin
+- **Table**: `users`
+- **Attributes**: Inherits all attributes from the `User` model.
+- **Relationships**: None specific to `Admin`.
 
-1. **Admin**
-   - First Name
-   - Last Name
+## Application
+- **Table**: `applications`
+- **Attributes**:
+  - `volunteer_id`: Foreign key to `Volunteer`
+  - `event_id`: Foreign key to `Event`
+  - `is_approved`: Boolean indicating approval status
+  - `status`: Application status (`Pending`, `Rejected`, `Approved`)
+  - `decision_at`: Timestamp of the decision
+- **Relationships**:
+  - `belongsTo(Volunteer::class)`: Belongs to a `Volunteer`
+  - `belongsTo(Event::class)`: Belongs to an `Event`
 
-2. **User**
-   - Id
-   - email
-   - username
-   - password
-   - License_active_until
-   - is_active
+## Attendance
+- **Table**: `attendances`
+- **Attributes**:
+  - `event_id`: Foreign key to `Event`
+  - `volunteer_id`: Foreign key to `Volunteer`
+  - `hours`: Number of hours attended
+- **Relationships**:
+  - `belongsTo(Event::class)`: Belongs to an `Event`
+  - `belongsTo(Volunteer::class)`: Belongs to a `Volunteer`
 
-3. **Organization**
-   - Org. Name
-   - Org. Address
-   - Org. Phone
-   - Commercial reg. No
+## Event
+- **Table**: `events`
+- **Attributes**:
+  - `start_date`: Start date of the event
+  - `end_date`: End date of the event
+  - `target_hours`: Target hours for the event
+  - `points`: Points associated with the event
+  - `address`: Event address
+  - `city`: Event city
+  - `country`: Event country
+  - `is_approved`: Boolean indicating approval status
+  - `status`: Event status (`Pending`, `Rejected`, `Approved`)
+  - `event_category_id`: Foreign key to `EventCategory`
+  - `organization_id`: Foreign key to `Organization`
+- **Relationships**:
+  - `belongsTo(EventCategory::class)`: Belongs to an `EventCategory`
+  - `belongsTo(Organization::class)`: Belongs to an `Organization`
 
-4. **Application**
-   - id
-   - user_id
-   - event_id
-   - status
-   - decision_at
-   - created_at
+## EventCategory
+- **Table**: `event_categories`
+- **Attributes**:
+  - `name`: Name of the event category
+- **Relationships**:
+  - `hasMany(Event::class)`: Has many `Event`
 
-5. **Event**
-   - id
-   - start_date
-   - end_date
-   - target_hours
-   - points
-   - address
-   - city
-   - country
+## Organization
+- **Table**: `users`
+- **Attributes**: Inherits all attributes from the `User` model.
+- **Relationships**:
+  - `hasMany(Event::class)`: Has many `Event`
 
-6. **Event Category**
-   - Id
-   - Name
+## Rating
+- **Table**: `ratings`
+- **Attributes**:
+  - `volunteer_id`: Foreign key to `Volunteer`
+  - `event_id`: Foreign key to `Event`
+  - `rate`: Rating value
+- **Relationships**:
+  - `belongsTo(Volunteer::class)`: Belongs to a `Volunteer`
+  - `belongsTo(Event::class)`: Belongs to an `Event`
 
-7. **Attendance**
-   - id
-   - hours
+## User
+- **Table**: `users`
+- **Attributes**:
+  - `name`: User name
+  - `email`: User email
+  - `password`: User password
+  - `phone`: User phone number
+  - `address`: User address
+  - `profile_photo_base64`: Base64 encoded profile photo
+  - `identification_type`: Type of identification
+  - `identification_number`: Identification number
+  - `user_type`: User type (`Admin`, `Organization`, `Volunteer`)
+  - `is_active`: Boolean indicating active status
+  - `active_until`: Date until active
+  - `is_approved`: Boolean indicating approval status
+  - `approved_at`: Timestamp of approval
+  - `points`: User points
+  - `skills`: User skills
+  - `details`: Additional details
+- **Relationships**: None specific to `User`.
 
-8. **Rating**
-   - id
-   - rate
-   - comment
-   - created_at
-
-9. **Volunteer**
-   - Identification Number
-   - FName
-   - LName
-   - phone number
-   - profile photo
-   - skills
-   - points
-   - description
-
-## Relationships
-
-1. **Admin is User**: One-to-One
-2. **User is Volunteer**: One-to-One
-3. **Organization owns Event**: One-to-Many
-4. **Volunteer has Application**: One-to-Many
-5. **Application to Event**: Many-to-One
-6. **Event has Event Category**: Many-to-One
-7. **Volunteer made Attendance**: One-to-Many
-8. **Attendance to Event**: Many-to-One
-9. **Volunteer owns Rating**: One-to-Many
-10. **Rating to Event**: Many-to-One
+## Volunteer
+- **Table**: `users`
+- **Attributes**: Inherits all attributes from the `User` model.
+- **Relationships**: None specific to `Volunteer`.

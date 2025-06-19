@@ -33,17 +33,42 @@ Route::group(
         'prefix' => 'auth'
     ],
     function ($router) {
-    Route::post('/register', [AuthController::class, 'register']);
-    Route::post('/login', [AuthController::class, 'login']);
-});
+        Route::post('/register', [AuthController::class, 'register']);
+        Route::post('/login', [AuthController::class, 'login']);
+    }
+);
 
 Route::group(
     [
         'middleware' => ['jwt', 'api'],
         'prefix' => 'auth'
-    ], function () {
-    Route::get('/user', [AuthController::class, 'getUser']);
-    Route::post('/logout', [AuthController::class, 'logout']);
-    Route::put('/user', [AuthController::class, 'updateUser']);
-    Route::post('/refresh', [AuthController::class, 'refresh'])->name('refresh');
+    ],
+    function () {
+        Route::get('/user', [AuthController::class, 'getUser']);
+        Route::post('/logout', [AuthController::class, 'logout']);
+        Route::put('/user', [AuthController::class, 'updateUser']);
+        Route::post('/refresh', [AuthController::class, 'refresh'])->name('refresh');
+    }
+);
+
+Route::group([
+    'middleware' => ['jwt', 'api']
+], function () {
+    Route::apiResource('/events', App\Http\Controllers\API\EventController::class);
+
+    Route::apiResource('/organizations', App\Http\Controllers\API\OrganizationController::class);
+
+    Route::apiResource('/event_categories', App\Http\Controllers\API\EventCategoryController::class);
+
+    Route::apiResource('/users', App\Http\Controllers\API\UserController::class);
+
+    Route::apiResource('/ratings', App\Http\Controllers\API\RatingController::class);
+
+    Route::apiResource('/volunteers', App\Http\Controllers\API\VolunteerController::class);
+
+    Route::apiResource('/applications', App\Http\Controllers\API\ApplicationController::class);
+
+    Route::apiResource('/attendances', App\Http\Controllers\API\AttendanceController::class);
+
+    Route::get('/user/{user}/profile_photo', 'App\Http\Controllers\API\UserController@profile_photo')->name('user.profile_photo');
 });

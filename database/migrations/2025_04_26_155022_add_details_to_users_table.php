@@ -22,7 +22,7 @@ return new class extends Migration
             $table->boolean('is_active')->default(1)->before('created_at');
             $table->date('active_until')->default('9999-12-31')->before('created_at');
             $table->boolean('is_approved')->default(0)->before('created_at');
-            $table->date('approved_at')->nullable()->before('created_at');
+            $table->timestamp('approved_at')->nullable()->before('created_at');
             $table->float('points')->default(0)->before('created_at');
             $table->text('skills')->nullable()->before('created_at');
             $table->longText('details')->nullable()->before('created_at');

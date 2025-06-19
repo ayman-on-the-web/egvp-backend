@@ -15,6 +15,9 @@ class User extends Authenticatable implements JWTSubject
     const TYPE_ORGANIZATION = "Organiztion";
     const TYPE_VOLUNTEER = "Volunteer";
 
+    const IDENTIFICATION_NATIONAL_ID = "National ID";
+    const IDENTIFICATION_COMMERCIAL = "Commercial Registeration Number";
+
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 

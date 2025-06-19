@@ -13,8 +13,13 @@ class Application extends Model
     protected $fillable = [
         'volunteer_id',
         'event_id',
+        'is_approved',
         'status',
         'decision_at'
+    ];
+    
+    protected $casts = [
+        'is_approved' => 'boolean',
     ];
 
     public function volunteer()
@@ -30,7 +35,8 @@ class Application extends Model
     public function make_decision($decision) {
         $this->update([
             'status' => $decision,
-            'decision_at' => date('Y-m-d H:i:s')
+            'decision_at' => date('Y-m-d H:i:s'),
+            'is_approved' => $decision == self::STATUS_APPROVED
         ]);
 
         return true;

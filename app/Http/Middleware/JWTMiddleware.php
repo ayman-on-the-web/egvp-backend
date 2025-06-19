@@ -19,6 +19,9 @@ class JWTMiddleware
     {
         try {
             JWTAuth::parseToken()->authenticate();
+            if (!auth()->user()->is_active) {
+                return response()->json(['error' => 'Your user is inactive'], 400);
+            }
         } catch (Exception $e) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
