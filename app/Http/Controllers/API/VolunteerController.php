@@ -39,18 +39,33 @@ class VolunteerController extends Controller
 
     public function update(VolunteerRequest $request, Volunteer $volunteer): VolunteerResource|\Illuminate\Http\JsonResponse
     {
-        if (auth()->user()->user_type !== User::TYPE_ADMIN) {
+
+        if (auth()->user()->user_type !== User::TYPE_ADMIN &&  auth()->id() !== $volunteer->id) {
             return response()->json(['errors' => ['Unauthorized.']], 403);
         }
 
         try {
 
-            if ($request->is_approved != $volunteer->is_approved) {
-                $volunteer->update(['approved_at' => date('Y-m-d H:i:s')]);
+            $updates = $request->validated();
+            if (auth()->user()->user_type !== User::TYPE_ADMIN) {
+                //Allow to update self and minimal fields only
+                $allowed_keys = ['name', 'email', 'password', 'skills', 'details', 'profile_photo_base64', 'address', 'phone'];
+                $allowed_updates = [];
+
+                foreach ($updates as $update_key => $update_value) {
+                    if (!in_array($update_key, $allowed_keys)) {
+                        return response()->json(['errors' => ['Unauthorized.']], 403);
+                    };
+
+                    $allowed_updates[$update_key] = $update_value;
+                }
+
+                $volunteer->update($allowed_updates);
+                return new VolunteerResource($volunteer);
             }
 
+            //Admin update, allow all updates
             $volunteer->update($request->validated());
-
             return new VolunteerResource($volunteer);
         } catch (\Exception $exception) {
             report($exception);

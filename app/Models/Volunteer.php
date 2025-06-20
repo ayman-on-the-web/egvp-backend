@@ -32,4 +32,8 @@ class Volunteer extends User
             $query->where('user_type', User::TYPE_VOLUNTEER);
         });
     }
+
+    public function applications() {
+        return $this->hasMany(Application::class);
+    }
 }

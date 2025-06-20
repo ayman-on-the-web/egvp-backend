@@ -41,15 +41,31 @@ class OrganizationController extends Controller
 
     public function update(OrganizationRequest $request, Organization $organization): OrganizationResource|\Illuminate\Http\JsonResponse
     {
-        if (
-            auth()->user()->user_type !== User::TYPE_ADMIN  //Check user if admin
-            ||
-            (auth()->user()->user_type !== User::TYPE_ORGANIZATION  && auth()->user()->id !== $organization->id)
-        ) {
+        if (auth()->user()->user_type !== User::TYPE_ADMIN &&  auth()->id() !== $organization->id) {
             return response()->json(['errors' => ['Unauthorized.']], 403);
         }
 
         try {
+
+            $updates = $request->validated();
+            if (auth()->user()->user_type !== User::TYPE_ADMIN) {
+                //Allow to update self and minimal fields only
+                $allowed_keys = ['name', 'email', 'password', 'skills', 'details', 'profile_photo_base64', 'address', 'phone'];
+                $allowed_updates = [];
+
+                foreach ($updates as $update_key => $update_value) {
+                    if (!in_array($update_key, $allowed_keys)) {
+                        return response()->json(['errors' => ['Unauthorized.']], 403);
+                    };
+
+                    $allowed_updates[$update_key] = $update_value;
+                }
+
+                $organization->update($allowed_updates);
+                return new OrganizationResource($organization);
+            }
+
+            //Admin update, allow all updates
             $organization->update($request->validated());
             return new OrganizationResource($organization);
         } catch (\Exception $exception) {

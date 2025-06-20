@@ -16,26 +16,49 @@ class VolunteerRequest extends FormRequest
 
     public function rules(): array
     {
-        return [
-            'name' => 'string',
-            'email' => 'string',
-            'email_verified_at' => 'date',
-            'password' => 'string',
-            'remember_token' => 'string',
-            'phone' => 'string',
-            'address' => 'string',
-            'profile_photo_base64' => 'string',
+        $createRules = [
+            'name' => 'required|string',
+            'email' => 'required|string|email',
+            'password' => 'required|string|min:8',
+            'phone' => 'required|string',
+            'address' => 'required|string',
+            'profile_photo_base64' => 'nullable|string',
             'identification_type' => 'required|string|max:255|in:' . User::IDENTIFICATION_NATIONAL_ID,
             'identification_number' => 'required|string|max:255',
             'user_type' => 'required|string|max:255|in:' . User::TYPE_VOLUNTEER,
-            'is_active' => 'integer',
-            'active_until' => 'date',
-            'is_approved' => 'integer',
-            'approved_at' => 'date',
-            'points' => 'numeric',
-            'skills' => 'string',
-            'details' => 'string',
+            'is_active' => 'required|integer',
+            'active_until' => 'nullable|date',
+            'is_approved' => 'required|integer',
+            'approved_at' => 'nullable|date',
+            'points' => 'nullable|numeric',
+            'skills' => 'nullable|string',
+            'details' => 'nullable|string',
         ];
+    
+        $updateRules = [
+            'name' => 'nullable|string',
+            'email' => 'nullable|string|email',
+            'password' => 'nullable|string|min:8',
+            'phone' => 'nullable|string',
+            'address' => 'nullable|string',
+            'profile_photo_base64' => 'nullable|string',
+            'identification_type' => 'nullable|string|max:255|in:' . User::IDENTIFICATION_NATIONAL_ID,
+            'identification_number' => 'nullable|string|max:255',
+            'user_type' => 'nullable|string|max:255|in:' . User::TYPE_VOLUNTEER,
+            'is_active' => 'nullable|integer',
+            'active_until' => 'nullable|date',
+            'is_approved' => 'nullable|integer',
+            'approved_at' => 'nullable|date',
+            'points' => 'nullable|numeric',
+            'skills' => 'nullable|string',
+            'details' => 'nullable|string',
+        ];
+    
+        if ($this->method() === 'POST') {
+            return $createRules;
+        } else {
+            return $updateRules;
+        }
     }
 
     /**

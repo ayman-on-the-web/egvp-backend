@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class Event extends Model
 {
@@ -43,7 +45,17 @@ class Event extends Model
     }
 
     public function volunteers() {
-        return $this->hasMany(Volunteer::class);
+        $volunteers = DB::table('events')
+        ->join('applications', 'events.id', '=', 'applications.event_id')
+        ->join('users as volunteers', 'applications.volunteer_id', '=', 'volunteers.id')
+        ->selectRaw('volunteers.*')
+        ->all();
+
+        return Volunteer::hydarte($volunteers);
+    }
+
+    public function applications() {
+        return $this->hasMany(Application::class);
     }
 
     public function make_decision($decision) {
@@ -54,6 +66,29 @@ class Event extends Model
         ]);
 
         return true;
+    }
+
+    //Will check if the logged-in user has applied to this event before
+    public function auth_applied() {
+        if (Auth::guest()) {
+            return false;
+        }
+        return $this->applications()->where('volunteer_id', '=', Auth::id())->count('id') > 0;
+    }
+
+    //Returns the application status of the current user
+    public function auth_application() {
+        if (Auth::guest()) {
+            return null;
+        }
+
+        $application = $this->applications()->where('volunteer_id', '=', Auth::id())->first();
+        
+        if (!$application) {
+            return null;
+        }
+
+        return $application;
     }
 
     public function approve() {
