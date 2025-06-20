@@ -17,7 +17,7 @@ class Rating extends Model
 
     public function volunteer(): BelongsTo
     {
-        return $this->belongsTo(Volunteer::class);
+        return $this->belongsTo(User::class, 'volunteer_id');
     }
 
     public function event(): BelongsTo

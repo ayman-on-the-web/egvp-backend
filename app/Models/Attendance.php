@@ -19,6 +19,6 @@ class Attendance extends Model
 
     public function volunteer()
     {
-        return $this->belongsTo(Volunteer::class);
+        return $this->belongsTo(User::class, 'volunteer_id');
     }
 }

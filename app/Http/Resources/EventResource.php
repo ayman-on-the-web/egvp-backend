@@ -24,7 +24,7 @@ class EventResource extends JsonResource
             'organization_id' => $this->organization_id,
             'event_category' => $this->event_category,
             'organization' => $this->organization,
-            'auth_applied' => $this->has_applied(),
+            'auth_applied' => $this->auth_applied(),
             'auth_application' => $this->auth_application(),
             'volunteers' => $this->volunteers(),
         ];

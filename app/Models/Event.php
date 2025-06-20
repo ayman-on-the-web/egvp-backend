@@ -41,17 +41,19 @@ class Event extends Model
 
     public function organization(): BelongsTo
     {
-        return $this->belongsTo(Organization::class);
+        return $this->belongsTo(User::class, 'organization_id');
     }
 
     public function volunteers() {
         $volunteers = DB::table('events')
         ->join('applications', 'events.id', '=', 'applications.event_id')
         ->join('users as volunteers', 'applications.volunteer_id', '=', 'volunteers.id')
+        ->where('applications.is_approved', '=', true)
         ->selectRaw('volunteers.*')
-        ->all();
-
-        return Volunteer::hydarte($volunteers);
+        ->get()
+        ->toArray();
+        
+        return  Volunteer::hydrate($volunteers);
     }
 
     public function applications() {
