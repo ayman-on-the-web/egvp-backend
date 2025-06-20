@@ -29,6 +29,21 @@ class ApplicationController extends Controller
             return response()->json(['errors' => ['Volunteer is not found']], Response::HTTP_NOT_FOUND);
         }
 
+        if (auth()->user()->user_type != User::TYPE_ADMIN && auth()->id() != $request->volunteer_id) {
+            return response()->json(['errors' => ['User is only allowed to apply for himself.']], Response::HTTP_FORBIDDEN); 
+        }
+
+        if (auth()->user()->user_type != User::TYPE_ADMIN && auth()->user()->is_approved != true) {
+            return response()->json(['errors' => ['Volunteer is not approved.']], Response::HTTP_FORBIDDEN); 
+        }
+
+        $existsing_application = Application::where('volunteer_id', '=', $request->volunteer_id)
+        ->where('event_id', $request->event_id)->first();
+
+        if ($existsing_application) {
+            return response()->json(['errors' => ['Application already exists.']], Response::HTTP_NOT_ACCEPTABLE);
+        }
+
         try {
             $application = Application::create($request->validated());
             return new ApplicationResource($application);
@@ -41,11 +56,11 @@ class ApplicationController extends Controller
     public function show(Application $application): ApplicationResource|\Illuminate\Http\JsonResponse
     {
         if (
-            auth()->user()->user_type !== User::TYPE_ADMIN  //Check user if admin
+            auth()->user()->user_type != User::TYPE_ADMIN  //Check user if admin
             &&  
-            auth()->user()->id !== $application->volunteer_id //Check user is owner
+            auth()->user()->id != $application->volunteer_id //Check user is owner
             &&  
-            auth()->user()->id !== $application->event->organization_id //Check user is organization
+            auth()->user()->id != $application->event->organization_id //Check user is organization
             ) {
             return response()->json(['errors' => ['Unauthorized.']], 403);
         }
@@ -65,11 +80,11 @@ class ApplicationController extends Controller
         }
         
         if (
-            auth()->user()->user_type !== User::TYPE_ADMIN  //Check user if admin
+            auth()->user()->user_type != User::TYPE_ADMIN  //Check user if admin
             &&  
-            auth()->user()->id !== $application->volunteer_id //Check user is owner
+            auth()->user()->id != $application->volunteer_id //Check user is owner
             &&  
-            auth()->user()->id !== $application->event->organization_id //Check user is organization
+            auth()->user()->id != $application->event->organization_id //Check user is organization
             ) {
             return response()->json(['errors' => ['Unauthorized.']], 403);
         }
@@ -90,9 +105,9 @@ class ApplicationController extends Controller
     public function destroy(Application $application): \Illuminate\Http\JsonResponse
     {
         if (
-            auth()->user()->user_type !== User::TYPE_ADMIN  //Check user if admin
+            auth()->user()->user_type != User::TYPE_ADMIN  //Check user if admin
             &&  
-            auth()->user()->id !== $application->volunteer_id //Check user is owner
+            auth()->user()->id != $application->volunteer_id //Check user is owner
             ) {
             return response()->json(['errors' => ['Unauthorized.']], 403);
         }

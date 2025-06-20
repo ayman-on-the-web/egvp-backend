@@ -20,7 +20,7 @@ class EventCategoryController extends Controller
     public function store(EventCategoryRequest $request): EventCategoryResource|\Illuminate\Http\JsonResponse
     {
         if (
-            auth()->user()->user_type !== User::TYPE_ADMIN  //Check user if admin
+            auth()->user()->user_type != User::TYPE_ADMIN  //Check user if admin
             ) {
             return response()->json(['errors' => ['Unauthorized.']], 403);
         }
@@ -42,7 +42,7 @@ class EventCategoryController extends Controller
     public function update(EventCategoryRequest $request, EventCategory $eventCategory): EventCategoryResource|\Illuminate\Http\JsonResponse
     {
         if (
-            auth()->user()->user_type !== User::TYPE_ADMIN  //Check user if admin
+            auth()->user()->user_type != User::TYPE_ADMIN  //Check user if admin
             ) {
             return response()->json(['errors' => ['Unauthorized.']], 403);
         }
@@ -59,7 +59,7 @@ class EventCategoryController extends Controller
     public function destroy(EventCategory $eventCategory): \Illuminate\Http\JsonResponse
     {
         if (
-            auth()->user()->user_type !== User::TYPE_ADMIN  //Check user if admin
+            auth()->user()->user_type != User::TYPE_ADMIN  //Check user if admin
             ) {
             return response()->json(['errors' => ['Unauthorized.']], 403);
         }

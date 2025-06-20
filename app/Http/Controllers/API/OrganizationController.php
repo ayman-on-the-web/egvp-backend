@@ -20,7 +20,7 @@ class OrganizationController extends Controller
     public function store(OrganizationRequest $request): OrganizationResource|\Illuminate\Http\JsonResponse
     {
         if (
-            auth()->user()->user_type !== User::TYPE_ADMIN  //Check user if admin
+            auth()->user()->user_type != User::TYPE_ADMIN  //Check user if admin
         ) {
             return response()->json(['errors' => ['Unauthorized.']], 403);
         }
@@ -41,14 +41,14 @@ class OrganizationController extends Controller
 
     public function update(OrganizationRequest $request, Organization $organization): OrganizationResource|\Illuminate\Http\JsonResponse
     {
-        if (auth()->user()->user_type !== User::TYPE_ADMIN &&  auth()->id() !== $organization->id) {
+        if (auth()->user()->user_type != User::TYPE_ADMIN &&  auth()->id() != $organization->id) {
             return response()->json(['errors' => ['Unauthorized.']], 403);
         }
 
         try {
 
             $updates = $request->validated();
-            if (auth()->user()->user_type !== User::TYPE_ADMIN) {
+            if (auth()->user()->user_type != User::TYPE_ADMIN) {
                 //Allow to update self and minimal fields only
                 $allowed_keys = ['name', 'email', 'password', 'skills', 'details', 'profile_photo_base64', 'address', 'phone'];
                 $allowed_updates = [];
@@ -77,7 +77,7 @@ class OrganizationController extends Controller
     public function destroy(Organization $organization): \Illuminate\Http\JsonResponse
     {
         if (
-            auth()->user()->user_type !== User::TYPE_ADMIN  //Check user if admin
+            auth()->user()->user_type != User::TYPE_ADMIN  //Check user if admin
         ) {
             return response()->json(['errors' => ['Unauthorized.']], 403);
         }

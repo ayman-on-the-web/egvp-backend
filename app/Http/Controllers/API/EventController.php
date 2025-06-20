@@ -20,12 +20,28 @@ class EventController extends Controller
     public function store(EventRequest $request): EventResource|\Illuminate\Http\JsonResponse
     {
         if (
-            auth()->user()->user_type !== User::TYPE_ADMIN  //Check user if admin
+            auth()->user()->user_type != User::TYPE_ADMIN  //Check user if admin
             &&
-            auth()->user()->user_type !== User::TYPE_ORGANIZATION  //Check user if admin
+            auth()->user()->user_type != User::TYPE_ORGANIZATION  //Check user if admin
         ) {
-            return response()->json(['errors' => ['Unauthorized.']], 403);
+            return response()->json(['errors' => ['Only Admins and Organizations are allowed. Unauthorized.']], 403);
         }
+
+        if (
+            auth()->user()->user_type == User::TYPE_ORGANIZATION 
+            &&
+            auth()->user()->is_approved == false
+        ) {
+            return response()->json(['errors' => ['Organization not approved. Unauthorized.']], 403);
+        }
+
+        if (
+            auth()->user()->user_type == User::TYPE_ORGANIZATION 
+            &&
+            $request->organization_id != auth()->id()
+        ) {
+            return response()->json(['errors' => ['Organization user is only allowed to create events for himself. Unauthorized.']], 403);
+        } 
 
         try {
             $event = Event::create($request->validated());
@@ -44,7 +60,7 @@ class EventController extends Controller
     public function update(EventRequest $request, Event $event): EventResource|\Illuminate\Http\JsonResponse
     {
         if (
-            auth()->user()->user_type !== User::TYPE_ADMIN  //Check user if admin
+            auth()->user()->user_type != User::TYPE_ADMIN  //Check user if admin
         ) {
             return response()->json(['errors' => ['Unauthorized.']], 403);
         }
@@ -61,7 +77,7 @@ class EventController extends Controller
     public function destroy(Event $event): \Illuminate\Http\JsonResponse
     {
         if (
-            auth()->user()->user_type !== User::TYPE_ADMIN  //Check user if admin
+            auth()->user()->user_type != User::TYPE_ADMIN  //Check user if admin
         ) {
             return response()->json(['errors' => ['Unauthorized.']], 403);
         }

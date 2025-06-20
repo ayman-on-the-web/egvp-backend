@@ -30,9 +30,9 @@ class AttendanceController extends Controller
         }
 
         if (
-            auth()->user()->user_type !== User::TYPE_ADMIN  //Check user if admin
+            auth()->user()->user_type != User::TYPE_ADMIN  //Check user if admin
             &&
-            auth()->user()->id !== $request->event->organization_id //Check user is organization
+            auth()->user()->id != $request->event->organization_id //Check user is organization
         ) {
             return response()->json(['errors' => ['Unauthorized.']], 403);
         }
@@ -62,9 +62,9 @@ class AttendanceController extends Controller
         }
 
         if (
-            auth()->user()->user_type !== User::TYPE_ADMIN  //Check user if admin
+            auth()->user()->user_type != User::TYPE_ADMIN  //Check user if admin
             &&
-            auth()->user()->id !== $request->event->organization_id //Check user is organization
+            auth()->user()->id != $request->event->organization_id //Check user is organization
         ) {
             return response()->json(['errors' => ['Unauthorized.']], 403);
         }
@@ -81,7 +81,7 @@ class AttendanceController extends Controller
     public function destroy(Attendance $attendance): \Illuminate\Http\JsonResponse
     {
         if (
-            auth()->user()->user_type !== User::TYPE_ADMIN  //Check user if admin
+            auth()->user()->user_type != User::TYPE_ADMIN  //Check user if admin
         ) {
             return response()->json(['errors' => ['Unauthorized.']], 403);
         }

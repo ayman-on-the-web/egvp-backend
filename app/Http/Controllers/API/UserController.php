@@ -40,14 +40,14 @@ class UserController extends Controller
 
     public function update(UserRequest $request, User $user): UserResource|\Illuminate\Http\JsonResponse
     {
-        if (auth()->user()->user_type !== User::TYPE_ADMIN &&  auth()->id() !== $user->id) {
+        if (auth()->user()->user_type != User::TYPE_ADMIN &&  auth()->id() != $user->id) {
             return response()->json(['errors' => ['Unauthorized.']], 403);
         }
 
         try {
 
             $updates = $request->validated();
-            if (auth()->user()->user_type !== User::TYPE_ADMIN) {
+            if (auth()->user()->user_type != User::TYPE_ADMIN) {
                 //Allow to update self and minimal fields only
                 $allowed_keys = ['name', 'email', 'password', 'skills', 'details', 'profile_photo_base64', 'address', 'phone'];
                 $allowed_updates = [];
@@ -75,7 +75,7 @@ class UserController extends Controller
 
     public function destroy(User $user): \Illuminate\Http\JsonResponse
     {
-        if (auth()->user()->user_type !== User::TYPE_ADMIN) {
+        if (auth()->user()->user_type != User::TYPE_ADMIN) {
             return response()->json(['errors' => ['Unauthorized.']], 403);
         }
 

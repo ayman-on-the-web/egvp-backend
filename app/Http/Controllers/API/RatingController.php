@@ -51,7 +51,7 @@ class RatingController extends Controller
     public function update(RatingRequest $request, Rating $rating): RatingResource|\Illuminate\Http\JsonResponse
     {
         if (
-            auth()->user()->user_type !== User::TYPE_ADMIN  //Check user if admin
+            auth()->user()->user_type != User::TYPE_ADMIN  //Check user if admin
         ) {
             return response()->json(['errors' => ['Unauthorized.']], 403);
         }

@@ -40,14 +40,14 @@ class VolunteerController extends Controller
     public function update(VolunteerRequest $request, Volunteer $volunteer): VolunteerResource|\Illuminate\Http\JsonResponse
     {
 
-        if (auth()->user()->user_type !== User::TYPE_ADMIN &&  auth()->id() !== $volunteer->id) {
+        if (auth()->user()->user_type != User::TYPE_ADMIN &&  auth()->id() != $volunteer->id) {
             return response()->json(['errors' => ['Unauthorized.']], 403);
         }
 
         try {
 
             $updates = $request->validated();
-            if (auth()->user()->user_type !== User::TYPE_ADMIN) {
+            if (auth()->user()->user_type != User::TYPE_ADMIN) {
                 //Allow to update self and minimal fields only
                 $allowed_keys = ['name', 'email', 'password', 'skills', 'details', 'profile_photo_base64', 'address', 'phone'];
                 $allowed_updates = [];
@@ -75,7 +75,7 @@ class VolunteerController extends Controller
 
     public function destroy(Volunteer $volunteer): \Illuminate\Http\JsonResponse
     {
-        if (auth()->user()->user_type !== User::TYPE_ADMIN) {
+        if (auth()->user()->user_type != User::TYPE_ADMIN) {
             return response()->json(['errors' => ['Unauthorized.']], 403);
         }
 
