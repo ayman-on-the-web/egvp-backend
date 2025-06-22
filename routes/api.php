@@ -54,6 +54,9 @@ Route::group(
 Route::group([
     'middleware' => ['jwt', 'api']
 ], function () {
+
+    Route::get('/events/{event}/participants', [App\Http\Controllers\API\EventController::class, 'participants']);
+
     Route::apiResource('/events', App\Http\Controllers\API\EventController::class);
 
     Route::apiResource('/organizations', App\Http\Controllers\API\OrganizationController::class);

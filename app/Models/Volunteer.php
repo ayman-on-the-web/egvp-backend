@@ -36,4 +36,18 @@ class Volunteer extends User
     public function applications() {
         return $this->hasMany(Application::class);
     }
+
+    public function attendances() {
+        return $this->hasMany(Attendance::class);
+    }
+
+    public function points() {
+        $points = 0;
+        
+        foreach($this->attendances as $attendance) {
+            $points = $points + $attendance->points();
+        }
+
+        return round($points, 2);
+    }
 }
