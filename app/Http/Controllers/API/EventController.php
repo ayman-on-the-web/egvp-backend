@@ -9,6 +9,7 @@ use App\Http\Resources\ParticipantResource;
 use App\Models\Event;
 use App\Models\Participant;
 use App\Models\User;
+use App\Models\Volunteer;
 use Illuminate\Http\Request;
 use stdClass;
 use Symfony\Component\HttpFoundation\Response;
@@ -96,5 +97,9 @@ class EventController extends Controller
 
     public function participants(Event $event, Request $request) {
         return ParticipantResource::collection($event->participants());
+    }
+
+    public function participants_show(Event $event, Volunteer $volunteer, Request $request) {
+        return ParticipantResource::collection(collect([$event->participants()->where('id', $volunteer->id)->first()]));
     }
 }

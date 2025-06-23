@@ -56,6 +56,7 @@ Route::group([
 ], function () {
 
     Route::get('/events/{event}/participants', [App\Http\Controllers\API\EventController::class, 'participants']);
+    Route::get('/events/{event}/participants/{volunteer}', [App\Http\Controllers\API\EventController::class, 'participants_show']);
 
     Route::apiResource('/events', App\Http\Controllers\API\EventController::class);
 
