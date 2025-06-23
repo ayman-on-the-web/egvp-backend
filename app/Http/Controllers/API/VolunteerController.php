@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\VolunteerRequest;
+use App\Http\Resources\ApplicationResource;
 use App\Http\Resources\VolunteerResource;
 use App\Models\User;
 use App\Models\Volunteer;
@@ -86,5 +87,9 @@ class VolunteerController extends Controller
             report($exception);
             return response()->json(['errors' => ['There is an error.']], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+    }
+
+    public function applications(Volunteer $volunteer) {
+        return ApplicationResource::collection($volunteer->applications);
     }
 }

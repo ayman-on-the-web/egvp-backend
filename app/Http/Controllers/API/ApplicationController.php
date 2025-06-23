@@ -95,6 +95,15 @@ class ApplicationController extends Controller
 
         try {
             $application->update($request->validated());
+
+            if ($request->has('is_approved') && $request->is_approved) {
+                $application->approve();
+            }
+
+            if ($request->has('is_approved') && !$request->is_approved) {
+                $application->reject();
+            }
+
             return new ApplicationResource($application);
         } catch (\Exception $exception) {
             report($exception);

@@ -67,6 +67,8 @@ Route::group([
 
     Route::apiResource('/ratings', App\Http\Controllers\API\RatingController::class);
 
+    Route::get('/volunteers/{volunteer}/applications', 'App\Http\Controllers\API\VolunteerController@applications');
+
     Route::apiResource('/volunteers', App\Http\Controllers\API\VolunteerController::class);
 
     Route::apiResource('/applications', App\Http\Controllers\API\ApplicationController::class);

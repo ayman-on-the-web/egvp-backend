@@ -49,4 +49,12 @@ class Application extends Model
     public function reject() {
         return $this->make_decision(self::STATUS_REJECTED);
     }
+
+    public function attendance() {
+        $attendace = Attendance::where('event_id', $this->event_id)
+        ->where('volunteer_id', $this->volunteer_id)
+        ->first();
+        
+        return $attendace;
+    }
 }
