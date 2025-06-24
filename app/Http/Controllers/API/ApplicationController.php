@@ -22,26 +22,26 @@ class ApplicationController extends Controller
     public function store(ApplicationRequest $request): ApplicationResource|\Illuminate\Http\JsonResponse
     {
         if (!Event::find($request->event_id)) {
-            return response()->json(['errors' => ['Event is not found']], Response::HTTP_NOT_FOUND);
+            return response()->json(['errors' => __('Event is not found')], Response::HTTP_NOT_FOUND);
         }
         
         if (!Volunteer::find($request->volunteer_id)) {
-            return response()->json(['errors' => ['Volunteer is not found']], Response::HTTP_NOT_FOUND);
+            return response()->json(['errors' => __('Volunteer is not found')], Response::HTTP_NOT_FOUND);
         }
 
         if (auth()->user()->user_type != User::TYPE_ADMIN && auth()->id() != $request->volunteer_id) {
-            return response()->json(['errors' => ['User is only allowed to apply for himself.']], Response::HTTP_FORBIDDEN); 
+            return response()->json(['errors' => __('User is only allowed to apply for himself')], Response::HTTP_FORBIDDEN); 
         }
 
         if (auth()->user()->user_type != User::TYPE_ADMIN && auth()->user()->is_approved != true) {
-            return response()->json(['errors' => ['Volunteer is not approved.']], Response::HTTP_FORBIDDEN); 
+            return response()->json(['errors' => __('Volunteer is not approved')], Response::HTTP_FORBIDDEN); 
         }
 
         $existsing_application = Application::where('volunteer_id', '=', $request->volunteer_id)
         ->where('event_id', $request->event_id)->first();
 
         if ($existsing_application) {
-            return response()->json(['errors' => ['Application already exists.']], Response::HTTP_NOT_ACCEPTABLE);
+            return response()->json(['errors' => __('Application already exists')], Response::HTTP_NOT_ACCEPTABLE);
         }
 
         try {
@@ -49,7 +49,7 @@ class ApplicationController extends Controller
             return new ApplicationResource($application);
         } catch (\Exception $exception) {
             report($exception);
-            return response()->json(['errors' => ['There is an error.']], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return response()->json(['errors' => __('There is an error')], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -62,7 +62,7 @@ class ApplicationController extends Controller
             &&  
             auth()->user()->id != $application->event->organization_id //Check user is organization
             ) {
-            return response()->json(['errors' => ['Unauthorized.']], 403);
+            return response()->json(['errors' => __('Unauthorized')], 403);
         }
         
 
@@ -72,11 +72,11 @@ class ApplicationController extends Controller
     public function update(ApplicationRequest $request, Application $application): ApplicationResource|\Illuminate\Http\JsonResponse
     {
         if (!Event::find($request->event_id)) {
-            return response()->json(['errors' => ['Event is not found']], Response::HTTP_NOT_FOUND);
+            return response()->json(['errors' => __('Event is not found')], Response::HTTP_NOT_FOUND);
         }
         
         if (!Volunteer::find($request->volunteer_id)) {
-            return response()->json(['errors' => ['Volunteer is not found']], Response::HTTP_NOT_FOUND);
+            return response()->json(['errors' => __('Volunteer is not found')], Response::HTTP_NOT_FOUND);
         }
         
         if (
@@ -86,19 +86,28 @@ class ApplicationController extends Controller
             &&  
             auth()->user()->id != $application->event->organization_id //Check user is organization
             ) {
-            return response()->json(['errors' => ['Unauthorized.']], 403);
+            return response()->json(['errors' => __('Unauthorized')], 403);
         }
 
         if ($application->status == Application::STATUS_REJECTED) {
-            return response()->json(['errors' => ['You cannot modify a rejected application.']], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return response()->json(['errors' => __('You cannot modify a rejected application')], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         try {
             $application->update($request->validated());
+
+            if ($request->has('is_approved') && $request->is_approved) {
+                $application->approve();
+            }
+
+            if ($request->has('is_approved') && !$request->is_approved) {
+                $application->reject();
+            }
+
             return new ApplicationResource($application);
         } catch (\Exception $exception) {
             report($exception);
-            return response()->json(['errors' => ['There is an error.']], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return response()->json(['errors' => __('There is an error')], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -109,15 +118,15 @@ class ApplicationController extends Controller
             &&  
             auth()->user()->id != $application->volunteer_id //Check user is owner
             ) {
-            return response()->json(['errors' => ['Unauthorized.']], 403);
+            return response()->json(['errors' => __('Unauthorized')], 403);
         }
 
         try {
             $application->delete();
-            return response()->json(['message' => 'Deleted successfully'], Response::HTTP_OK);
+            return response()->json(['message' => __('Deleted successfully')], Response::HTTP_OK);
         } catch (\Exception $exception) {
             report($exception);
-            return response()->json(['errors' => ['There is an error.']], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return response()->json(['errors' => __('There is an error')], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }

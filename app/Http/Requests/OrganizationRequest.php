@@ -72,7 +72,7 @@ class OrganizationRequest extends FormRequest
         throw new HttpResponseException(
             response()->json([
                 'success' => false,
-                'message' => 'Organization validation failed',
+                'message' => __('Organization validation failed'),
                 'errors' => collect($validator->errors())->flatten()->toArray(),
             ], 422)
         );

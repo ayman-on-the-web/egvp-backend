@@ -5,9 +5,13 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\EventRequest;
 use App\Http\Resources\EventResource;
+use App\Http\Resources\ParticipantResource;
 use App\Models\Event;
+use App\Models\Participant;
 use App\Models\User;
+use App\Models\Volunteer;
 use Illuminate\Http\Request;
+use stdClass;
 use Symfony\Component\HttpFoundation\Response;
 
 class EventController extends Controller
@@ -70,7 +74,7 @@ class EventController extends Controller
             return new EventResource($event);
         } catch (\Exception $exception) {
             report($exception);
-            return response()->json(['errors' => ['There is an error.']], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return response()->json(['errors' => __('There is an error')], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -79,15 +83,23 @@ class EventController extends Controller
         if (
             auth()->user()->user_type != User::TYPE_ADMIN  //Check user if admin
         ) {
-            return response()->json(['errors' => ['Unauthorized.']], 403);
+            return response()->json(['errors' => __('Unauthorized')], 403);
         }
         
         try {
             $event->delete();
-            return response()->json(['message' => 'Deleted successfully'], Response::HTTP_OK);
+            return response()->json(['message' =>  __('Deleted successfully')], Response::HTTP_OK);
         } catch (\Exception $exception) {
             report($exception);
-            return response()->json(['errors' => ['There is an error.']], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return response()->json(['errors' =>  __('There is an error')], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+    }
+
+    public function participants(Event $event, Request $request) {
+        return ParticipantResource::collection($event->participants());
+    }
+
+    public function participants_show(Event $event, Volunteer $volunteer, Request $request) {
+        return ParticipantResource::collection(collect([$event->participants()->where('id', $volunteer->id)->first()]));
     }
 }

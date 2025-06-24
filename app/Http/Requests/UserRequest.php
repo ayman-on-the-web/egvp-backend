@@ -50,7 +50,7 @@ class UserRequest extends FormRequest
         throw new HttpResponseException(
             response()->json([
                 'success' => false,
-                'message' => 'User validation failed',
+                'message' => __('User validation failed'),
                 'errors' => collect($validator->errors())->flatten()->toArray(),
             ], 422)
         );

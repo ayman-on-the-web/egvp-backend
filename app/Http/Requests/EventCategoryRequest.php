@@ -33,7 +33,7 @@ class EventCategoryRequest extends FormRequest
         throw new HttpResponseException(
             response()->json([
                 'success' => false,
-                'message' => 'Event Category validation failed',
+                'message' => __('Event Category validation failed'),
                 'errors' => collect($validator->errors())->flatten()->toArray(),
             ], 422)
         );

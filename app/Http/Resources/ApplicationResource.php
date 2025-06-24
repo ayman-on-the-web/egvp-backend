@@ -18,6 +18,7 @@ class ApplicationResource extends JsonResource
             'is_approved' => $this->is_approved,
             'status' => $this->status,
             'decision_at' => $this->decision_at,
+            'attendance' => $this->attendance(),
         ];
     }
 }

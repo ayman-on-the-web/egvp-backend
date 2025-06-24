@@ -49,6 +49,7 @@ class Event extends Model
         ->join('applications', 'events.id', '=', 'applications.event_id')
         ->join('users as volunteers', 'applications.volunteer_id', '=', 'volunteers.id')
         ->where('applications.is_approved', '=', true)
+        ->where('applications.event_id', $this->id)
         ->selectRaw('volunteers.*')
         ->get()
         ->toArray();
@@ -56,8 +57,38 @@ class Event extends Model
         return  Volunteer::hydrate($volunteers);
     }
 
+    public function participants() {
+        $volunteers = DB::table('events')
+        ->join('applications', 'events.id', '=', 'applications.event_id')
+        ->join('users as volunteers', 'applications.volunteer_id', '=', 'volunteers.id')
+        ->selectRaw('volunteers.*')
+        ->where('applications.event_id', $this->id)
+        ->get()
+        ->toArray();
+        
+        $participants =  Participant::hydrate($volunteers);
+
+        $attendances = $this->attendances;
+        $applications = $this->applications;
+
+        foreach($participants as $participant) {
+            $attendance = $attendances->where('volunteer_id', $participant->id)->first();
+            $application = $applications->where('volunteer_id', $participant->id)->first();
+
+            $participant->event_id = $this->id;
+            $participant->attendance_id = $attendance ? $attendance->id : null;
+            $participant->application_id = $application ? $application->id : null;
+        }
+
+        return $participants;
+    }
+
     public function applications() {
         return $this->hasMany(Application::class);
+    }
+
+    public function attendances() {
+        return $this->hasMany(Attendance::class);
     }
 
     public function make_decision($decision) {

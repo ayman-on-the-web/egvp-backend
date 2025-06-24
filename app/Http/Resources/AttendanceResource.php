@@ -14,6 +14,7 @@ class AttendanceResource extends JsonResource
             'event_id' => $this->event_id,
             'volunteer_id' => $this->volunteer_id,
             'hours' => $this->hours,
+            'points' => $this->points,
         ];
     }
 }
