@@ -96,7 +96,7 @@ Route::group([
     Route::get('/ratings/{rating}', [App\Http\Controllers\API\RatingController::class, 'show'])->name('ratings.show');
 
     Route::get('/volunteers', [App\Http\Controllers\API\VolunteerController::class, 'index'])->name('volunteers.index');
-    Route::get('/volunteers', [App\Http\Controllers\API\VolunteerController::class, 'index'])->name('volunteers.show');
+    Route::get('/volunteers/{volunteer}', [App\Http\Controllers\API\VolunteerController::class, 'show'])->name('volunteers.show');
     
     Route::get('/user/{user}/profile_photo', 'App\Http\Controllers\API\UserController@profile_photo')->name('user.profile_photo');
 });
