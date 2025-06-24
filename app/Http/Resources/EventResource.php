@@ -27,6 +27,7 @@ class EventResource extends JsonResource
             'auth_applied' => $this->auth_applied(),
             'auth_application' => $this->auth_application(),
             'volunteers' => $this->volunteers(),
+            'image_url' => route('events.image', $this),
         ];
     }
 }

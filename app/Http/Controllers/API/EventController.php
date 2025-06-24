@@ -102,4 +102,8 @@ class EventController extends Controller
     public function participants_show(Event $event, Volunteer $volunteer, Request $request) {
         return ParticipantResource::collection(collect([$event->participants()->where('id', $volunteer->id)->first()]));
     }
+
+    public function image(Event $event) {
+        return $event->image();
+    }
 }

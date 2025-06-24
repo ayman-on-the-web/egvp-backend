@@ -26,6 +26,7 @@ class EventRequest extends FormRequest
             'is_approved' => 'integer',
             'event_category_id' => 'integer',
             'organization_id' => 'integer',
+            'image_base64' => 'nullable|string',
         ];
     }
 
