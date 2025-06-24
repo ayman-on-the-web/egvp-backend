@@ -93,6 +93,10 @@ class ApplicationController extends Controller
             return response()->json(['errors' => __('You cannot modify a rejected application')], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
+        if ($application->status == Application::STATUS_APPROVED) {
+            return response()->json(['errors' => __('Application already approved')], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
         try {
             $application->update($request->validated());
 
