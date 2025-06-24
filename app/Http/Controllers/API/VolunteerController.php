@@ -21,7 +21,7 @@ class VolunteerController extends Controller
     public function store(VolunteerRequest $request): VolunteerResource|\Illuminate\Http\JsonResponse
     {
         if ($request->user_type == User::TYPE_ADMIN) {
-            return response()->json(['errors' => ['You are not allowed to create an admin user.']], 403); 
+            return response()->json(['errors' => __('You are not allowed to create an admin user')], 403); 
         }
         
         try {
@@ -29,7 +29,7 @@ class VolunteerController extends Controller
             return new VolunteerResource($volunteer);
         } catch (\Exception $exception) {
             report($exception);
-            return response()->json(['errors' => ['There is an error.']], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return response()->json(['errors' => __('There is an error')], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -42,7 +42,7 @@ class VolunteerController extends Controller
     {
 
         if (auth()->user()->user_type != User::TYPE_ADMIN &&  auth()->id() != $volunteer->id) {
-            return response()->json(['errors' => ['Unauthorized.']], 403);
+            return response()->json(['errors' => __('Unauthorized')], 403);
         }
 
         try {
@@ -55,7 +55,7 @@ class VolunteerController extends Controller
 
                 foreach ($updates as $update_key => $update_value) {
                     if (!in_array($update_key, $allowed_keys)) {
-                        return response()->json(['errors' => ['Unauthorized.']], 403);
+                        return response()->json(['errors' => __('Unauthorized')], 403);
                     };
 
                     $allowed_updates[$update_key] = $update_value;
@@ -70,22 +70,22 @@ class VolunteerController extends Controller
             return new VolunteerResource($volunteer);
         } catch (\Exception $exception) {
             report($exception);
-            return response()->json(['errors' => ['There is an error.']], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return response()->json(['errors' => __('There is an error')], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
     public function destroy(Volunteer $volunteer): \Illuminate\Http\JsonResponse
     {
         if (auth()->user()->user_type != User::TYPE_ADMIN) {
-            return response()->json(['errors' => ['Unauthorized.']], 403);
+            return response()->json(['errors' => __('Unauthorized')], 403);
         }
 
         try {
             $volunteer->delete();
-            return response()->json(['message' => 'Deleted successfully'], Response::HTTP_OK);
+            return response()->json(['message' => __('Deleted successfully')], Response::HTTP_OK);
         } catch (\Exception $exception) {
             report($exception);
-            return response()->json(['errors' => ['There is an error.']], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return response()->json(['errors' => __('There is an error')], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 

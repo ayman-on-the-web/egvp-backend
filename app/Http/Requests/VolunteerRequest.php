@@ -74,7 +74,7 @@ class VolunteerRequest extends FormRequest
         throw new HttpResponseException(
             response()->json([
                 'success' => false,
-                'message' => 'Volunteer validation failed',
+                'message' => __('Volunteer validation failed'),
                 'errors' => collect($validator->errors())->flatten()->toArray(),
             ], 422)
         );

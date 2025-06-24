@@ -22,11 +22,11 @@ class AttendanceController extends Controller
     public function store(AttendanceRequest $request): AttendanceResource|\Illuminate\Http\JsonResponse
     {
         if (!Event::find($request->event_id)) {
-            return response()->json(['errors' => ['Event is not found']], Response::HTTP_NOT_FOUND);
+            return response()->json(['errors' => __('Event is not found')], Response::HTTP_NOT_FOUND);
         }
 
         if (!Volunteer::find($request->volunteer_id)) {
-            return response()->json(['errors' => ['Volunteer is not found']], Response::HTTP_NOT_FOUND);
+            return response()->json(['errors' => __('Volunteer is not found')], Response::HTTP_NOT_FOUND);
         }
 
         if (
@@ -34,7 +34,7 @@ class AttendanceController extends Controller
             &&
             auth()->user()->id != $request->event->organization_id //Check user is organization
         ) {
-            return response()->json(['errors' => ['Unauthorized.']], 403);
+            return response()->json(['errors' => __('Unauthorized')], 403);
         }
 
         try {
@@ -42,7 +42,7 @@ class AttendanceController extends Controller
             return new AttendanceResource($attendance);
         } catch (\Exception $exception) {
             report($exception);
-            return response()->json(['errors' => ['There is an error.']], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return response()->json(['errors' => __('There is an error')], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -54,11 +54,11 @@ class AttendanceController extends Controller
     public function update(AttendanceRequest $request, Attendance $attendance): AttendanceResource|\Illuminate\Http\JsonResponse
     {
         if (!Event::find($request->event_id)) {
-            return response()->json(['errors' => ['Event is not found']], Response::HTTP_NOT_FOUND);
+            return response()->json(['errors' => __('Event is not found')], Response::HTTP_NOT_FOUND);
         }
 
         if (!Volunteer::find($request->volunteer_id)) {
-            return response()->json(['errors' => ['Volunteer is not found']], Response::HTTP_NOT_FOUND);
+            return response()->json(['errors' => __('Volunteer is not found')], Response::HTTP_NOT_FOUND);
         }
 
         if (
@@ -66,7 +66,7 @@ class AttendanceController extends Controller
             &&
             auth()->user()->id != $request->event->organization_id //Check user is organization
         ) {
-            return response()->json(['errors' => ['Unauthorized.']], 403);
+            return response()->json(['errors' => __('Unauthorized')], 403);
         }
 
         try {
@@ -74,7 +74,7 @@ class AttendanceController extends Controller
             return new AttendanceResource($attendance);
         } catch (\Exception $exception) {
             report($exception);
-            return response()->json(['errors' => ['There is an error.']], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return response()->json(['errors' => __('There is an error')], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -83,15 +83,15 @@ class AttendanceController extends Controller
         if (
             auth()->user()->user_type != User::TYPE_ADMIN  //Check user if admin
         ) {
-            return response()->json(['errors' => ['Unauthorized.']], 403);
+            return response()->json(['errors' => __('Unauthorized')], 403);
         }
 
         try {
             $attendance->delete();
-            return response()->json(['message' => 'Deleted successfully'], Response::HTTP_OK);
+            return response()->json(['message' => __('Deleted successfully')], Response::HTTP_OK);
         } catch (\Exception $exception) {
             report($exception);
-            return response()->json(['errors' => ['There is an error.']], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return response()->json(['errors' => __('There is an error')], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }

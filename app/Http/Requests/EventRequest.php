@@ -42,7 +42,7 @@ class EventRequest extends FormRequest
         throw new HttpResponseException(
             response()->json([
                 'success' => false,
-                'message' => 'Event validation failed',
+                'message' => __('Event validation failed'),
                 'errors' => collect($validator->errors())->flatten()->toArray(),
             ], 422)
         );

@@ -35,7 +35,7 @@ class AttendanceRequest extends FormRequest
         throw new HttpResponseException(
             response()->json([
                 'success' => false,
-                'message' => 'Attendance validation failed',
+                'message' => __('Attendance validation failed'),
                 'errors' => collect($validator->errors())->flatten()->toArray(),
             ], 422)
         );

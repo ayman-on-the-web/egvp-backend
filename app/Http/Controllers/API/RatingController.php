@@ -31,7 +31,7 @@ class RatingController extends Controller
             ||
             auth()->user()->id != $request->volunteer_id
         ) {
-            return response()->json(['errors' => ['Unauthorized.']], 403);
+            return response()->json(['errors' => __('Unauthorized')], 403);
         }
         
         try {
@@ -39,7 +39,7 @@ class RatingController extends Controller
             return new RatingResource($rating);
         } catch (\Exception $exception) {
             report($exception);
-            return response()->json(['errors' => ['There is an error.']], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return response()->json(['errors' => __('There is an error')], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -61,7 +61,7 @@ class RatingController extends Controller
             return new RatingResource($rating);
         } catch (\Exception $exception) {
             report($exception);
-            return response()->json(['errors' => ['There is an error.']], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return response()->json(['errors' => __('There is an error')], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -69,10 +69,10 @@ class RatingController extends Controller
     {
         try {
             $rating->delete();
-            return response()->json(['message' => 'Deleted successfully'], Response::HTTP_OK);
+            return response()->json(['message' => __('Deleted successfully')], Response::HTTP_OK);
         } catch (\Exception $exception) {
             report($exception);
-            return response()->json(['errors' => ['There is an error.']], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return response()->json(['errors' => __('There is an error')], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }

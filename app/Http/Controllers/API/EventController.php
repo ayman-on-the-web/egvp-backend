@@ -74,7 +74,7 @@ class EventController extends Controller
             return new EventResource($event);
         } catch (\Exception $exception) {
             report($exception);
-            return response()->json(['errors' => ['There is an error.']], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return response()->json(['errors' => __('There is an error')], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -83,15 +83,15 @@ class EventController extends Controller
         if (
             auth()->user()->user_type != User::TYPE_ADMIN  //Check user if admin
         ) {
-            return response()->json(['errors' => ['Unauthorized.']], 403);
+            return response()->json(['errors' => __('Unauthorized')], 403);
         }
         
         try {
             $event->delete();
-            return response()->json(['message' => 'Deleted successfully'], Response::HTTP_OK);
+            return response()->json(['message' =>  __('Deleted successfully')], Response::HTTP_OK);
         } catch (\Exception $exception) {
             report($exception);
-            return response()->json(['errors' => ['There is an error.']], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return response()->json(['errors' =>  __('There is an error')], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 

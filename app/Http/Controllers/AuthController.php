@@ -15,7 +15,7 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         if ($request->user_type == User::TYPE_ADMIN) {
-            return response()->json(['error' => 'You are not allowed to create an admin user.'], 403); 
+            return response()->json(['error' => __('You are not allowed to create an admin user')], 403); 
         }
 
         $request->validate([
@@ -59,7 +59,7 @@ class AuthController extends Controller
         try {
             $token = JWTAuth::fromUser($user);
         } catch (JWTException $e) {
-            return response()->json(['error' => 'Could not create token'], 500);
+            return response()->json(['error' => __('Could not create token')], 500);
         }
 
         return response()->json([
@@ -74,14 +74,14 @@ class AuthController extends Controller
     
         try {
             if (!$token = JWTAuth::attempt($credentials)) {
-                return response()->json(['error' => 'Invalid credentials'], 401);
+                return response()->json(['error' => __('Invalid credentials')], 401);
             } 
             
             if (!auth()->user()->is_active) {
-                return response()->json(['error' => 'Your user is inactive'], 400);
+                return response()->json(['error' => __('Your user is inactive')], 400);
             }
         } catch (JWTException $e) {
-            return response()->json(['error' => 'Could not create token'], 500);
+            return response()->json(['error' => __('Could not create token')], 500);
         }
 
         $user = auth()->user();
@@ -99,10 +99,10 @@ class AuthController extends Controller
         try {
             JWTAuth::invalidate(JWTAuth::getToken());
         } catch (JWTException $e) {
-            return response()->json(['error' => 'Failed to logout, please try again'], 500);
+            return response()->json(['error' => __('Failed to logout, please try again')], 500);
         }
 
-        return response()->json(['message' => 'Successfully logged out']);
+        return response()->json(['message' => __('Successfully logged out')]);
     }
 
     public function getUser()
@@ -110,11 +110,11 @@ class AuthController extends Controller
         try {
             $user = Auth::user();
             if (!$user) {
-                return response()->json(['error' => 'User not found'], 404);
+                return response()->json(['error' => __('User not found')], 404);
             }
             return response()->json($user);
         } catch (JWTException $e) {
-            return response()->json(['error' => 'Failed to fetch user profile'], 500);
+            return response()->json(['error' => __('Failed to fetch user profile')], 500);
         }
     }
 
@@ -126,7 +126,7 @@ class AuthController extends Controller
             $user->save();
             return response()->json($user);
         } catch (JWTException $e) {
-            return response()->json(['error' => 'Failed to update user'], 500);
+            return response()->json(['error' => __('Failed to update user')], 500);
         }
     }
 
