@@ -29,10 +29,12 @@ class AttendanceController extends Controller
             return response()->json(['errors' => __('Volunteer is not found')], Response::HTTP_NOT_FOUND);
         }
 
+        $event = Event::find($request->event_id);
+
         if (
             auth()->user()->user_type != User::TYPE_ADMIN  //Check user if admin
             &&
-            auth()->user()->id != $request->event->organization_id //Check user is organization
+            auth()->user()->id != $event->organization_id //Check user is organization
         ) {
             return response()->json(['errors' => __('Unauthorized')], 403);
         }

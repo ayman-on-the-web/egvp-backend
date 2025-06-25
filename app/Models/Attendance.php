@@ -22,11 +22,11 @@ class Attendance extends Model
 
         static::updated(function ($attendance) {
             if ($attendance->isDirty('hours')) {
-                $attendance->points = $attendance->points();
+                $attendance->points = $attendance->getPoints();
                 $attendance->save();
 
                 $volunteer = $attendance->volunteer;
-                $volunteer->points = $volunteer->points();
+                $volunteer->points = $volunteer->getPoints();
                 $volunteer->save();
             }
         });
@@ -42,7 +42,7 @@ class Attendance extends Model
         return $this->belongsTo(User::class, 'volunteer_id');
     }
 
-    public function points()
+    public function getPoints()
     {
 
         if (!$this->hours) {

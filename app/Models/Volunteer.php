@@ -41,11 +41,11 @@ class Volunteer extends User
         return $this->hasMany(Attendance::class);
     }
 
-    public function points() {
+    public function getPoints() {
         $points = 0;
         
         foreach($this->attendances as $attendance) {
-            $points = $points + $attendance->points();
+            $points = $points + $attendance->getPoints();
         }
 
         return round($points, 2);
