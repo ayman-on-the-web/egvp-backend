@@ -25,11 +25,11 @@ Route::group([
 
 Route::get('/', function () {
     return response()->json(['message' => 'Hello world!']);
-});
+})->middleware('cors');
 
 Route::group(
     [
-        'middleware' => 'api',
+        'middleware' => ['api', 'cors'],
         'prefix' => 'auth'
     ],
     function ($router) {
@@ -40,7 +40,7 @@ Route::group(
 
 Route::group(
     [
-        'middleware' => ['jwt', 'api'],
+        'middleware' => ['jwt', 'api', 'cors'],
         'prefix' => 'auth'
     ],
     function () {
@@ -52,7 +52,7 @@ Route::group(
 );
 
 Route::group([
-    'middleware' => ['jwt', 'api']
+    'middleware' => ['jwt', 'api', 'cors']
 ], function () {
 
     Route::get('/events/{event}/participants', [App\Http\Controllers\API\EventController::class, 'participants']);
@@ -80,7 +80,7 @@ Route::group([
 
 
 Route::group([
-    'middleware' => ['api']
+    'middleware' => ['api', 'cors']
 ], function () {
     Route::get('/events/{event}/image', [App\Http\Controllers\API\EventController::class, 'image'])->name('events.image');
     Route::get('/events', [App\Http\Controllers\API\EventController::class, 'index'])->name('events.index');

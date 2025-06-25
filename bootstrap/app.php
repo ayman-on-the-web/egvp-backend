@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\CORSMiddleware;
 use App\Http\Middleware\ForceJson;
 use App\Http\Middleware\JWTMiddleware;
 use Illuminate\Auth\AuthenticationException;
@@ -18,6 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
             'jwt' => JWTMiddleware::class,
+            'cors' => CORSMiddleware::class,
         ]);
         $middleware->appendToGroup('api', ForceJson::class);
     })
