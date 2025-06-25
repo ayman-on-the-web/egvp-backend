@@ -107,4 +107,8 @@ class User extends Authenticatable implements JWTSubject
         echo base64_decode($this->profile_photo_base64);
         exit;
     }
+
+    public function applications() {
+        return $this->hasMany(Application::class, 'volunteer_id');
+    }
 }

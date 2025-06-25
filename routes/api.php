@@ -80,7 +80,7 @@ Route::group([
 
 
 Route::group([
-    'middleware' => ['api', 'cors']
+    'middleware' => ['api', 'cors', 'jwt_optional']
 ], function () {
     Route::get('/events/{event}/image', [App\Http\Controllers\API\EventController::class, 'image'])->name('events.image');
     Route::get('/events', [App\Http\Controllers\API\EventController::class, 'index'])->name('events.index');
